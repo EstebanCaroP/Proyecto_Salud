@@ -30,5 +30,3 @@ def check_df(dataframe, head=5):
     
     display(Markdown('**Número de duplicados**'))
     display(dataframe.duplicated().sum())
-    display(dataframe[dataframe.duplicated(keep='last')])
-    display(dataframe[dataframe.duplicated(keep='first')])
