@@ -30,3 +30,23 @@ def check_df(dataframe, head=5):
     
     display(Markdown('**Número de duplicados**'))
     display(dataframe.duplicated().sum())
+
+
+def imputar_f(df, list_cat):  
+    # Separar el DataFrame en numérico y categórico
+    df_c = df[list_cat]
+    df_n = df.loc[:, ~df.columns.isin(list_cat)]
+
+    # Imputar valores faltantes solo en las columnas numéricas
+    imputer_n = SimpleImputer(strategy='median')
+    X_n = imputer_n.fit_transform(df_n)
+    df_n_imputed = pd.DataFrame(X_n, columns=df_n.columns)
+
+    # Imputar valores faltantes solo en las columnas categóricas
+    imputer_c = SimpleImputer(strategy='most_frequent')
+    X_c = imputer_c.fit_transform(df_c)
+    df_c_imputed = pd.DataFrame(X_c, columns=df_c.columns)
+
+    # Concatenar los DataFrames nuevamente
+    df_new = pd.concat([df_n_imputed, df_c_imputed], axis=1)
+    return df_new
