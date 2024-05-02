@@ -32,21 +32,28 @@ def check_df(dataframe, head=5):
     display(dataframe.duplicated().sum())
 
 
-def imputar_f(df, list_cat):  
-    # Separar el DataFrame en numérico y categórico
-    df_c = df[list_cat]
-    df_n = df.loc[:, ~df.columns.isin(list_cat)]
+def imputar_f (df,list_cat):  
+        
+    
+    df_c=df[list_cat]
 
-    # Imputar valores faltantes solo en las columnas numéricas
-    imputer_n = SimpleImputer(strategy='median')
-    X_n = imputer_n.fit_transform(df_n)
-    df_n_imputed = pd.DataFrame(X_n, columns=df_n.columns)
+    df_n=df.loc[:,~df.columns.isin(list_cat)]
 
-    # Imputar valores faltantes solo en las columnas categóricas
-    imputer_c = SimpleImputer(strategy='most_frequent')
-    X_c = imputer_c.fit_transform(df_c)
-    df_c_imputed = pd.DataFrame(X_c, columns=df_c.columns)
+    imputer_n=SimpleImputer(strategy='median')
+    imputer_c=SimpleImputer( strategy='most_frequent')
 
-    # Concatenar los DataFrames nuevamente
-    df_new = pd.concat([df_n_imputed, df_c_imputed], axis=1)
-    return df_new
+    imputer_n.fit(df_n)
+    imputer_c.fit(df_c)
+    imputer_c.get_params()
+    imputer_n.get_params()
+
+    X_n=imputer_n.transform(df_n)
+    X_c=imputer_c.transform(df_c)
+
+    df_n=pd.DataFrame(X_n,columns=df_n.columns)
+    df_c=pd.DataFrame(X_c,columns=df_c.columns)
+    df_c.info()
+    df_n.info()
+
+    df =pd.concat([df_n,df_c],axis=1)
+    return df
